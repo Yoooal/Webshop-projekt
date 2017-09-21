@@ -3,6 +3,12 @@ $session = $app->session;
 $db = $app->db;
 $db->connect();
 
+$user_not_loggedin = "disabled";
+
+if ($session->has("name")) {
+  $user_not_loggedin = "";
+}
+
 // Get number of hits per page
 $hits = getGet("hits", 5);
 if (!(is_numeric($hits) && $hits > 0 && $hits <= 9)) {
@@ -142,7 +148,7 @@ if ($search != null) {
                   <td><?= $row->price ?> kr</td>
                   <td><?= $row->category ?></td>
                   <td><?= $row->items ?> st</td>
-                  <td><a type="button" class="btn btn-lg btn-primary" href="products?shop=<?= $row->id ?>"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></td>
+                  <td><a type="button" class="btn btn-lg btn-primary <?=$user_not_loggedin?>" href="products?shop=<?= $row->id ?>"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></td>
               </tr>
             </tbody>
           <?php endforeach; ?>

@@ -6,6 +6,13 @@ html {
   margin-top: 100px;
 }
 
+.homeLogo {
+    max-width: 200px;
+    display: block;
+    margin: 20px auto;
+    width: 70%;
+}
+
 .page-content {
   min-height: 60em;
 }

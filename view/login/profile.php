@@ -4,6 +4,10 @@ $cookie = $app->cookie;
 $db = $app->db;
 $db->connect();
 
+if (!$session->has("name")) {
+  $app->response->redirect($app->url->create(""));
+}
+
 $status = '<div class="alert alert-info" role="alert">Change Password</div>';
 $user_name = $session->get("name");
 $cookieStatus = '<div class="alert alert-danger" role="alert">No Cookie exist</div>';

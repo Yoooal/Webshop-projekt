@@ -23,8 +23,9 @@ $resultset = $db->executeFetchAll($sql);
       <div class="slide-1"></div>
       <div class="hero">
         <hgroup>
+          <img src="img/sneaker.png" alt="Avatar" class="img-responsive homeLogo">
           <h1>Sneaker Store</h1>
-          <h3>Go and have a look at our awesome Products</h3>
+          <!-- <h3>Go and have a look at our awesome Products</h3> -->
         </hgroup>
         <a class="btn btn-hero btn-lg" href="<?= $app->url->create("products") ?>">Go to Products</a>
       </div>
@@ -33,8 +34,9 @@ $resultset = $db->executeFetchAll($sql);
       <div class="slide-2"></div>
       <div class="hero">
         <hgroup>
+          <img src="img/sneaker.png" alt="Avatar" class="img-responsive homeLogo">
           <h1>Sneaker Store</h1>
-          <h3>Go and have a look at our awesome Blog</h3>
+          <!-- <h3>Go and have a look at our awesome Blog</h3> -->
         </hgroup>
         <a class="btn btn-hero btn-lg" href="<?= $app->url->create("blog") ?>">Go to Blog</a>
       </div>
