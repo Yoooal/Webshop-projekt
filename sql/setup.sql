@@ -1,7 +1,8 @@
 
 -- create database webshop;
 --
-use jopg16;
+-- use jopg16;
+use webshop;
 
 DROP TABLE IF EXISTS `content`;
 DROP TABLE IF EXISTS `Prod2Cat`;

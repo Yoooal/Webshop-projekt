@@ -39,33 +39,13 @@ $order = getGet("order") ?: "asc";
 if (!(in_array($orderBy, $columns) && in_array($order, $orders))) {
     die("Not valid input for sorting.");
 }
-$sql = <<<EOD
-SELECT
-  S.shelf,
-  I.items,
-  P.description,
-  P.price,
-  P.id,
-  P.picture,
-  GROUP_CONCAT(category) AS category
-FROM Inventory AS I
-  INNER JOIN InvenShelf AS S
-    ON I.shelf_id = S.shelf
-  INNER JOIN Product AS P
-    ON P.id = I.prod_id
-  INNER JOIN Prod2Cat AS P2C
-    ON P.id = P2C.prod_id
-  INNER JOIN ProdCategory AS PC
-    ON PC.id = P2C.cat_id
-GROUP BY P.id
-ORDER BY $orderBy $order LIMIT $hits OFFSET $offset;
-EOD;
+$sql = "SELECT * FROM showWebshop ORDER BY $orderBy $order LIMIT $hits OFFSET $offset;";
 $resultset = $db->executeFetchAll($sql);
 $defaultRoute = "products?";
 
-$search = isset($_POST["search"]) ? htmlentities($_POST["search"]) : null;
-$id = isset($_POST["id"]) ? htmlentities($_POST["id"]) : null;
-$shop = isset($_GET["shop"]) ? htmlentities($_GET["shop"]) : null;
+$search = getPost("search");
+$id = getPost("id");
+$shop = getGet("shop");
 
 if ($shop != null) {
   $costumerName = $session->get("name");
@@ -80,7 +60,7 @@ if ($shop != null) {
 
 if ($search != null) {
   $sql = $app->sqlCode->getSqlCode("searchWebshop");
-  $resultset = $db->executeFetchAll($sql, [$search]);
+  $resultset = $db->executeFetchAll($sql, [$search . "%"]);
 }
 ?>
 
@@ -117,53 +97,50 @@ if ($search != null) {
             </div>
           </form>
         </div>
-        <div class="col-md-6">
-        </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-        <table class="table">
-          <nav aria-label="Page navigation">
-            <ul class="pagination">
-              <li><a href="<?= mergeQueryString(["hits" => 2], $defaultRoute) ?>">2</a></li>
-              <li><a href="<?= mergeQueryString(["hits" => 4], $defaultRoute) ?>">4</a></li>
-              <li><a href="<?= mergeQueryString(["hits" => 8], $defaultRoute) ?>">8</a></li>
-            </ul>
-          </nav>
-          <thead>
-            <tr>
-              <th>Bild</th>
-              <th>Produkt <?= orderby("description", $defaultRoute) ?></th>
-              <th>Pris <?= orderby("price", $defaultRoute) ?></th>
-              <th>Kategori <?= orderby("category", $defaultRoute) ?></th>
-              <th>Lagerstatus</th>
-              <th></th>
-            </tr>
-          </thead>
-          <?php foreach ($resultset as $row) :?>
-            <tbody>
-              <tr>
-                  <td><a target="_blank" href="<?=$row->picture?>"><img src="<?= $row->picture ?>" class="img-responsive img-rounded webshop" alt="Responsive image"></a></td>
-                  <td><?= $row->description ?></td>
-                  <td><?= $row->price ?> kr</td>
-                  <td><?= $row->category ?></td>
-                  <td><?= $row->items ?> st</td>
-                  <td><a type="button" class="btn btn-lg btn-primary <?=$user_not_loggedin?>" href="products?shop=<?= $row->id ?>"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></td>
-              </tr>
-            </tbody>
-          <?php endforeach; ?>
-        </table>
-        <b>Pages:</b>
-        <nav aria-label="Page navigation">
-          <ul class="pagination">
-            <?php for ($i = 1; $i <= $max; $i++) : ?>
-                <li><a href="<?= mergeQueryString(["page" => $i], $defaultRoute) ?>"><?= $i ?></a></li>
-            <?php endfor; ?>
-          </ul>
-        </nav>
+            <table class="table">
+              <nav aria-label="Page navigation">
+                <ul class="pagination">
+                  <li><a href="<?= mergeQueryString(["hits" => 2], $defaultRoute) ?>">2</a></li>
+                  <li><a href="<?= mergeQueryString(["hits" => 4], $defaultRoute) ?>">4</a></li>
+                  <li><a href="<?= mergeQueryString(["hits" => 8], $defaultRoute) ?>">8</a></li>
+                </ul>
+              </nav>
+              <thead>
+                <tr>
+                  <th>Bild</th>
+                  <th>Produkt <?= orderby("description", $defaultRoute) ?></th>
+                  <th>Pris <?= orderby("price", $defaultRoute) ?></th>
+                  <th>Kategori <?= orderby("category", $defaultRoute) ?></th>
+                  <th>Lagerstatus</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <?php foreach ($resultset as $row) :?>
+                <tbody>
+                  <tr>
+                      <td><a href="product?show=<?= $row->id ?>"><img src="<?= $row->picture ?>" class="img-responsive img-rounded webshop" alt="Responsive image"></a></td>
+                      <td><a href="product?show=<?= $row->id ?>"><?= $row->description ?></a></td>
+                      <td><?= $row->price ?> kr</td>
+                      <td><?= $row->category ?></td>
+                      <td><?= $row->items ?> st</td>
+                      <td><a type="button" class="btn btn-lg btn-primary <?=$user_not_loggedin?>" href="products?shop=<?= $row->id ?>"><i class="fa fa-cart-plus" aria-hidden="true"></i></a></td>
+                  </tr>
+                </tbody>
+              <?php endforeach; ?>
+            </table>
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <?php for ($i = 1; $i <= $max; $i++) : ?>
+                    <li><a href="<?= mergeQueryString(["page" => $i], $defaultRoute) ?>"><?= $i ?></a></li>
+                <?php endfor; ?>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </div>

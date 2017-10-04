@@ -32,15 +32,14 @@ if (hasKeyPost("doCreate")) {
 
 <div class="container" role="main">
   <div class="page-header">
+      <button type="button" class="btn btn-default btn-lg pull-right" data-toggle="modal" data-target="#addWebshop">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add Product
+      </button>
       <h1>Webshop</h1>
   </div>
     <div class="page-content">
       <div class="row">
         <div class="col-md-12">
-        <br>
-        <button type="button" class="btn btn-default btn-lg pull-right" data-toggle="modal" data-target="#addWebshop">
-          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-        </button>
         <table class="table">
           <thead>
             <tr>

@@ -45,12 +45,12 @@ $resultset = $db->executeFetchAll($sql);
 $defaultRoute = "user?";
 
 // Handle incoming POST variables
-$new_pass = isset($_POST["new_pass"]) ? htmlentities($_POST["new_pass"]) : null;
-$re_pass = isset($_POST["re_pass"]) ? htmlentities($_POST["re_pass"]) : null;
-$level = isset($_POST["level"]) ? htmlentities($_POST["level"]) : null;
-$search = isset($_POST["search"]) ? htmlentities($_POST["search"]) : null;
-$id = isset($_POST["id"]) ? htmlentities($_POST["id"]) : null;
-$del = isset($_GET["del"]) ? htmlentities($_GET["del"]) : null;
+$new_pass = getPost("new_pass");
+$re_pass = getPost("re_pass");
+$level = getPost("level");
+$search = getPost("search");
+$id = getPost("id");
+$del = getGet("del");
 
 if ($new_pass != null && $re_pass != null) {
     // Check if new password matches
@@ -78,12 +78,15 @@ if ($del != null) {
 
 if ($search != null) {
   $sql = "SELECT * FROM Customer WHERE username LIKE ?;";
-  $resultset = $db->executeFetchAll($sql, [$search]);
+  $resultset = $db->executeFetchAll($sql, [$search . "%"]);
 }
 ?>
 
 <div class="container" role="main">
   <div class="page-header">
+      <button type="button" class="btn btn-default btn-lg pull-right" data-toggle="modal" data-target="#addUser">
+        <i class="fa fa-user-plus" aria-hidden="true"></i> Add User
+      </button>
       <h1>Users</h1>
   </div>
   <div class="page-content">
@@ -104,11 +107,6 @@ if ($search != null) {
                 </div>
             </div>
           </form>
-        </div>
-        <div class="col-md-6">
-        <button type="button" class="btn btn-default btn-lg pull-right" data-toggle="modal" data-target="#addUser">
-          <i class="fa fa-user-plus" aria-hidden="true"></i>
-        </button>
         </div>
         </div>
         <div class="row">

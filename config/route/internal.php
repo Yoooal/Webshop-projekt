@@ -8,6 +8,10 @@ $app->router->add('pages/{page}', function ($page) use ($app) {
   $app->renderPage("page", "$page");
 });
 
+$app->router->add("product", function () use ($app) {
+  $app->renderPage("productPage", "Product");
+});
+
 $app->router->add("delete", function () use ($app) {
   $app->renderPage("admin/delete", "Delete");
 });

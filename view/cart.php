@@ -3,9 +3,9 @@ $session = $app->session;
 $db = $app->db;
 $db->connect();
 
-$del = isset($_GET["del"]) ? htmlentities($_GET["del"]) : null;
-$product = isset($_GET["product"]) ? htmlentities($_GET["product"]) : null;
-$checkout = isset($_GET["checkout"]) ? htmlentities($_GET["checkout"]) : null;
+$del = getGet("del");
+$product = getGet("product");
+$checkout = getGet("checkout");
 
 if ($checkout != null) {
   $sql = "CALL fromVarukorgToOrder(?);";
@@ -31,13 +31,12 @@ $totalPrice = 0;
 
 <div class="container" role="main">
   <div class="page-header">
+      <a type="button" class="btn btn-primary btn-lg pull-right" href="cart?checkout=<?=$cart->id?>"><i class="fa fa-credit-card" aria-hidden="true"></i> Checkout</a>
       <h1>Cart</h1>
   </div>
   <div class="page-content">
     <div class="row">
       <div class="col-md-12">
-        <br>
-        <a type="button" class="btn btn-primary btn-lg pull-right" href="cart?checkout=<?=$cart->id?>"><i class="fa fa-credit-card" aria-hidden="true"></i> Checkout</a>
         <table class="table">
           <thead>
             <tr>

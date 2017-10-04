@@ -51,7 +51,7 @@ $resultset = $db->executeFetchAll($sql);
      <?php foreach ($resultset as $row) :?>
       <div class="item">
          <div class="col-xs-12 col-sm-6 col-md-3 team_columns_item_image">
-            <a target="_blank" href="<?=$row->picture?>"><img src="<?= $row->picture ?>" alt="Responsive image"></a>
+            <a href="product?show=<?= $row->id ?>"><img src="<?= $row->picture ?>" alt="Responsive image"></a>
             <div class="team_columns_item_caption">
                <h4><?=$row->description?></h4>
                <hr>

@@ -11,7 +11,7 @@ $sql = "SELECT * FROM content;";
 $content = $db->executeFetchAll($sql);
 
 // Handle incoming POST variables
-$id = isset($_POST["id"]) ? htmlentities($_POST["id"]) : null;
+$id = getPost("id");
 
 if (hasKeyPost("doCreate")) {
     $title = getPost("contentTitle");
@@ -21,24 +21,18 @@ if (hasKeyPost("doCreate")) {
 
     header("Location: edit?id=$id");
 }
-
-
 ?>
 
 <div class="container" role="main">
   <div class="page-header">
+      <button type="button" class="btn btn-default btn-lg pull-right" data-toggle="modal" data-target="#addContent">
+        <i class="fa fa-file-text-o" aria-hidden="true"></i> Add Content
+      </button>
       <h1>Content</h1>
   </div>
   <div class="page-content">
     <div class="row">
       <div class="col-md-12">
-        <div class="col-md-6">
-          <h2>Content</h2>
-        </div>
-        <br>
-        <button type="button" class="btn btn-default btn-lg pull-right" data-toggle="modal" data-target="#addContent">
-          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-        </button>
         <table class="table">
           <thead>
             <tr>

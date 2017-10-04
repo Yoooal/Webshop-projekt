@@ -25,11 +25,11 @@ $password = $array["password"];
 $id = $array["id"];
 
 // Handle incoming POST variables
-$old_pass = isset($_POST["old_pass"]) ? htmlentities($_POST["old_pass"]) : null;
-$new_pass = isset($_POST["new_pass"]) ? htmlentities($_POST["new_pass"]) : null;
-$re_pass = isset($_POST["re_pass"]) ? htmlentities($_POST["re_pass"]) : null;
-$new_cookie = isset($_POST["new_cookie"]) ? htmlentities($_POST["new_cookie"]) : null;
-$delete_cookie = isset($_GET["delete_cookie"]) ? htmlentities($_GET["delete_cookie"]) : null;
+$old_pass = getPost("old_pass");
+$new_pass = getPost("new_pass");
+$re_pass = getPost("re_pass");
+$new_cookie = getPost("new_cookie");
+$delete_cookie = getGet("delete_cookie");
 
 if ($new_cookie != null) {
   $cookie->set($user_name, $new_cookie);

@@ -27,7 +27,7 @@ $block4 = $db->executeFetch($sql, ["footerBlock4", "block"]);
           </div>
         </div>
         <hr>
-        <div class="row text-center">COPYRIGHT © 2017 SNEAKER STORE</div>
+        <div class="row text-center">COPYRIGHT © 2017 Joel Pettersson</div>
       </div>
     </footer>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

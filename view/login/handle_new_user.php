@@ -3,11 +3,11 @@ $db = $app->db;
 $db->connect();
 
 // Handle incoming POST variables
-$user_name = isset($_POST["new_name"]) ? htmlentities($_POST["new_name"]) : null;
-$user_pass = isset($_POST["new_pass"]) ? htmlentities($_POST["new_pass"]) : null;
-$re_user_pass = isset($_POST["re_pass"]) ? htmlentities($_POST["re_pass"]) : null;
-$firstName = isset($_POST["first_name"]) ? htmlentities($_POST["first_name"]) : null;
-$lastName = isset($_POST["last_name"]) ? htmlentities($_POST["last_name"]) : null;
+$user_name = getPost("new_name");
+$user_pass = getPost("new_pass");
+$re_user_pass = getPost("re_pass");
+$firstName = getPost("first_name");
+$lastName = getPost("last_name");
 
 
 if ($user_name != null) {

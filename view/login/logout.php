@@ -5,14 +5,6 @@ $session = $app->session;
 if ($session->has("name")) {
     $session->destroy();
     $app->response->redirect($app->url->create(""));
+} else {
+  $app->response->redirect($app->url->create(""));
 }
-
-// Check if session is active
-$has_session = session_status() == PHP_SESSION_ACTIVE;
-
-if (!$has_session) {
-    echo "<p>The session no longer exists. You have successfully logged out!</p>";
-}
-
-?>
-<div class="alert alert-danger" role="alert">You have logged out</div>
