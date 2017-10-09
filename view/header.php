@@ -15,6 +15,3 @@
 </head>
 
 <body role="document">
-<?php
-$session = $app->session;
-$session->start();

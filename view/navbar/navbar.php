@@ -1,7 +1,5 @@
 <?php
 $session = $app->session;
-$db = $app->db;
-$db->connect();
 
 $user_loggedin = "";
 $user_not_loggedin = "disabled";
@@ -19,14 +17,12 @@ if ($session->has("name")) {
   }
 }
 
+if (isset($_GET["logout"])) {
+  $app->user->logout();
+}
+
 if ($session->get("name") != null) {
-  $costumerName = $session->get("name");
-  $sql = "SELECT id FROM Customer WHERE username = ?;";
-  $customer = $db->executeFetch($sql, [$costumerName]);
-  $sql = "SELECT * FROM Varukorg WHERE customer = ?;";
-  $cart = $db->executeFetch($sql, [$customer->id]);
-  $sql = $app->sqlCode->getSqlCode("showCart");
-  $resultset = $db->executeFetchAll($sql, [$cart->id]);
+  $resultset = $app->user->showCart();
 }
 ?>
 
@@ -86,16 +82,14 @@ if ($session->get("name") != null) {
 				    <li>
 					  <div class="row">
 						<div class="col-md-12">
-
               <form class="form-signin" role="form" action="validate" method="POST">
                 <img src="img/sneaker.png" alt="Avatar" class="img-responsive avatar">
                 <input type="username" name="name" class="form-control" placeholder="Username" required autofocus <?=$user_loggedin?>>
                 <input type="password" name="pass" class="form-control" placeholder="Password" required <?=$user_loggedin?>>
                 <button class="btn btn-lg btn-primary btn-block" type="submit" name="submitForm" value="Login" <?=$user_loggedin?>>Sign in</button>
-                <a type="button" href="<?= $app->url->create("logout") ?>" class="btn btn-lg btn-danger btn-block" <?=$user_not_loggedin?>>Logout</a>
+                <a href="<?=$app->request->getRoute()?>?logout" class="btn btn-lg btn-danger btn-block" <?=$user_not_loggedin?>>Logout</a>
                 <button type="button" class="btn btn-lg btn-default btn-block" data-toggle="modal" data-target="#register">Create Account</button>
               </form>
-
 						</div>
 					 </div>
 				  </li>
@@ -108,40 +102,40 @@ if ($session->get("name") != null) {
 
 <!-- Modal -->
 <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-<div class="modal-dialog" role="document">
-<div class="modal-content">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel">Create Account</h4>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Create Account</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form" method="POST" action="handle_new_user">
+            <div class="form-group">
+                <label for="new_name">Username: </label>
+                <input type="text" name="new_name" class="form-control" required autofocus />
+            </div>
+            <div class="form-group">
+                <label for="new_pass">Password: </label>
+                <input type="password" name="new_pass" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="re_pass">Re-enter password: </label>
+                <input type="password" name="re_pass" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="new_name">First name: </label>
+                <input type="text" name="first_name" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="new_name">Last name: </label>
+                <input type="text" name="last_name" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary" name="submitCreateForm" value="Create">Add</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
-  <div class="modal-body">
-    <form role="form" method="POST" action="handle_new_user">
-        <div class="form-group">
-            <label for="new_name">Username: </label>
-            <input type="text" name="new_name" class="form-control" required autofocus />
-        </div>
-        <div class="form-group">
-            <label for="new_pass">Password: </label>
-            <input type="password" name="new_pass" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="re_pass">Re-enter password: </label>
-            <input type="password" name="re_pass" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="new_name">First name: </label>
-            <input type="text" name="first_name" class="form-control" required />
-        </div>
-        <div class="form-group">
-            <label for="new_name">Last name: </label>
-            <input type="text" name="last_name" class="form-control" required />
-        </div>
-        <button type="submit" class="btn btn-primary" name="submitCreateForm" value="Create">Add</button>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-  </div>
-</div>
-</div>
 </div>

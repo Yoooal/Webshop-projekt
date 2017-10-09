@@ -24,10 +24,6 @@ $app->router->add("editWebshop", function () use ($app) {
   $app->renderPage("admin/editWebshop", "Edit");
 });
 
-$app->router->add("logout", function () use ($app) {
-  $app->renderPage("login/logout", "Logout");
-});
-
 $app->router->add("handle_new_user", function () use ($app) {
   $app->renderPage("login/handle_new_user", "New User");
 });

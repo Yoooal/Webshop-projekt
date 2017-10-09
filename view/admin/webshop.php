@@ -1,32 +1,20 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
+$app->admin->checkIfAdmin();
 
-if ($session->get("name") != "admin") {
-  $app->response->redirect($app->url->create(""));
+$params = getPost([
+      "description",
+      "picture",
+      "price",
+      "category",
+      "items"
+  ]);
+
+if (hasKeyPost("doCreate")) {
+    $app->admin->createWebshop($params);
 }
 
 $sql = $app->sqlCode->getSqlCode("showWebshop");
-$content = $db->executeFetchAll($sql);
-
-if (hasKeyPost("doCreate")) {
-  $params = getPost([
-        "description",
-        "picture",
-        "price",
-        "category",
-        "items"
-    ]);
-    $sql = "INSERT INTO Product (description, picture, price) VALUES (?, ?, ?);";
-    $db->execute($sql, [$params["description"], $params["picture"], $params["price"]]);
-    $id = $db->lastInsertId();
-    $sql = "INSERT INTO Prod2Cat (prod_id, cat_id) VALUES (?, ?);";
-    $db->execute($sql, [$id, $params["category"]]);
-    $sql = "INSERT INTO Inventory (prod_id, shelf_id, items) VALUES (?, ?, ?);";
-    $db->execute($sql, [$id, "AAA102", $params["items"]]);
-    header('Location: ' . $_SERVER['REDIRECT_URL']);
-}
+$content = $app->db->executeFetchAll($sql);
 ?>
 
 
@@ -82,19 +70,19 @@ if (hasKeyPost("doCreate")) {
   <div class="modal-body">
     <form action="" method="POST">
       <div class="form-group">
-        <label>Produkt:</label>
+        <label>Description:</label>
         <input type="text" name="description" class="form-control"/>
       </div>
       <div class="form-group">
-        <label>Bild:</label>
+        <label>Picture:</label>
         <input type="text" name="picture" class="form-control"/>
       </div>
       <div class="form-group">
-        <label>Pris:</label>
+        <label>Price:</label>
         <input type="text" name="price" class="form-control"/>
       </div>
       <div class="form-group">
-          <label>Kategori:</label>
+          <label>Category:</label>
           <select class="form-control" name="category">
             <option value="1">Nike</option>
             <option value="2">Adidas</option>
@@ -102,7 +90,7 @@ if (hasKeyPost("doCreate")) {
           </select>
       </div>
       <div class="form-group">
-        <label>Lager:</label>
+        <label>Items:</label>
         <input type="text" name="items" class="form-control"/>
       </div>
       <button type="submit" class="btn btn-lg btn-primary btn-block" name="doCreate" >Save</button>

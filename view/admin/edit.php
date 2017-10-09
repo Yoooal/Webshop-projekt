@@ -1,42 +1,27 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
-
-if ($session->get("name") != "admin") {
-  $app->response->redirect($app->url->create(""));
-}
+$app->admin->checkIfAdmin();
 
 $status = '<div class="alert alert-info" role="alert">Edit here</div>';
 
+$params = getPost([
+      "contentTitle",
+      "contentPath",
+      "contentSlug",
+      "contentData",
+      "contentType",
+      "contentFilter",
+      "contentPublish",
+      "contentId"
+  ]);
+
 if (hasKeyPost("doSave")) {
-  //$params gets all values from getPost()
-  $params = getPost([
-        "contentTitle",
-        "contentPath",
-        "contentSlug",
-        "contentData",
-        "contentType",
-        "contentFilter",
-        "contentPublish",
-        "contentId"
-    ]);
-    if (!$params["contentPath"]) {
-    $params["contentPath"] = null;
-    }
-    if (!$params["contentSlug"]) {
-        $params["contentSlug"] = slugify($params["contentTitle"]);
-    }
-    $id = getPost("contentId");
-    $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
-    $db->execute($sql, array_values($params));
+    $app->admin->updateContent($params);
     $status = '<div class="alert alert-success" role="alert">Edit saved!</div>';
 }
 
 $contentId = getGet("id");
-
 $sql = "SELECT * FROM content WHERE id = ?;";
-$content = $db->executeFetch($sql, [$contentId]);
+$content = $app->db->executeFetch($sql, [$contentId]);
 $cat = ["page", "post", "block"];
 ?>
 

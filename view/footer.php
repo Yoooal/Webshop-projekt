@@ -1,13 +1,9 @@
 <?php
-$db = $app->db;
-$db->connect();
-$textfilter = $app->textfilter;
-
 $sql = $app->sqlCode->getSqlCode("block");
-$block1 = $db->executeFetch($sql, ["footerBlock1", "block"]);
-$block2 = $db->executeFetch($sql, ["footerBlock2", "block"]);
-$block3 = $db->executeFetch($sql, ["footerBlock3", "block"]);
-$block4 = $db->executeFetch($sql, ["footerBlock4", "block"]);
+$block1 = $app->db->executeFetch($sql, ["footerBlock1", "block"]);
+$block2 = $app->db->executeFetch($sql, ["footerBlock2", "block"]);
+$block3 = $app->db->executeFetch($sql, ["footerBlock3", "block"]);
+$block4 = $app->db->executeFetch($sql, ["footerBlock4", "block"]);
 ?>
 
     <footer class="footer">

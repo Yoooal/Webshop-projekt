@@ -1,16 +1,12 @@
 <?php
-$db = $app->db;
-$db->connect();
-$textfilter = $app->textfilter;
-
 $sql = $app->sqlCode->getSqlCode("blogpost");
 $route = $_SERVER["PATH_INFO"];
 $slug = substr($route, 6);
-$content = $db->executeFetch($sql, [$slug, "post"]);
+$content = $app->db->executeFetch($sql, [$slug, "post"]);
 $text = $content->data;
 
 if (strlen($content->filter) > 2) {
-  $text = $textfilter->doFilter($content->data, $content->filter);
+  $text = $app->textfilter->doFilter($content->data, $content->filter);
 }
 ?>
 

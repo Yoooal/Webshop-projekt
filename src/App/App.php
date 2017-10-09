@@ -9,6 +9,8 @@ class App
 {
 
   public function renderPage($page, $title) {
+    $this->session->start();
+    $this->db->connect();
     $this->view->add("header", ["title" => "$title"]);
     $this->view->add("navbar/navbar");
     $this->view->add("$page");

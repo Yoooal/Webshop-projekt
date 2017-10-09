@@ -1,7 +1,6 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
+
+$totalPrice = 0;
 
 $del = getGet("del");
 $product = getGet("product");
@@ -9,29 +8,24 @@ $checkout = getGet("checkout");
 
 if ($checkout != null) {
   $sql = "CALL fromVarukorgToOrder(?);";
-  $db->execute($sql, [$checkout]);
+  $app->db->execute($sql, [$checkout]);
   header("Location: order");
 }
 
 if ($del != null) {
   $sql = "CALL removeFromVarukorg(?, ?, ?);";
-  $db->execute($sql, [$del, $product, 1]);
+  $app->db->execute($sql, [$del, $product, 1]);
   header("Location: cart");
 }
 
-$costumerName = $session->get("name");
-$sql = "SELECT id FROM Customer WHERE username = ?;";
-$customer = $db->executeFetch($sql, [$costumerName]);
-$sql = "SELECT * FROM Varukorg WHERE customer = ?;";
-$cart = $db->executeFetch($sql, [$customer->id]);
-$sql = $app->sqlCode->getSqlCode("showCart");
-$content = $db->executeFetchAll($sql, [$cart->id]);
-$totalPrice = 0;
+$content = $app->user->showCart();
 ?>
 
 <div class="container" role="main">
   <div class="page-header">
-      <a type="button" class="btn btn-primary btn-lg pull-right" href="cart?checkout=<?=$cart->id?>"><i class="fa fa-credit-card" aria-hidden="true"></i> Checkout</a>
+    <?php if ($content != null) { ?>
+      <a class="btn btn-primary btn-lg pull-right" href="cart?checkout=<?=$content[0]->varukorg?>"><i class="fa fa-credit-card"></i> Checkout</a>
+    <?php } ?>
       <h1>Cart</h1>
   </div>
   <div class="page-content">
@@ -57,7 +51,7 @@ $totalPrice = 0;
                   <td><?= $row->price ?> kr</td>
                   <td><?= $row->category ?></td>
                   <td><?= $row->items ?> st</td>
-                  <td><a type="button" class="btn btn-lg btn-danger" href="cart?del=<?= $row->id ?>&product=<?= $row->product ?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                  <td><a type="button" class="btn btn-danger" href="cart?del=<?= $row->id ?>&product=<?= $row->product ?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
               </tr>
             </tbody>
           <?php endforeach; ?>

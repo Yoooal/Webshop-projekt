@@ -1,11 +1,7 @@
 <?php
-$db = $app->db;
-$db->connect();
-$textfilter = $app->textfilter;
-
 $sql = $app->sqlCode->getSqlCode("page");
-$content = $db->executeFetch($sql, ["about", "page"]);
-$text = $textfilter->doFilter($content->data, $content->filter);
+$content = $app->db->executeFetch($sql, ["about", "page"]);
+$text = $app->textfilter->doFilter($content->data, $content->filter);
 ?>
 
 <!-- Page Header -->

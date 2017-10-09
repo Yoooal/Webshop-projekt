@@ -1,19 +1,16 @@
 <?php
-$db = $app->db;
-$db->connect();
-$textfilter = $app->textfilter;
 
 $sql = $app->sqlCode->getSqlCode("page");
 $route = $_SERVER["PATH_INFO"];
 $page = substr($route, 7);
-$content = $db->executeFetch($sql, [$page, "page"]);
+$content = $app->db->executeFetch($sql, [$page, "page"]);
 if ($content == false) {
   $app->response->redirect($app->url->create("pages"));
 }
 $text = $content->data;
 
 if (strlen($content->filter) > 2) {
-  $text = $textfilter->doFilter($content->data, $content->filter);
+  $text = $app->textfilter->doFilter($content->data, $content->filter);
 }
 
 ?>

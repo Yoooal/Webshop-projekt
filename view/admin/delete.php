@@ -1,13 +1,5 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
-
-$status = '<div class="alert alert-info" role="alert">Delete here..</div>';
-
-if ($session->get("name") != "admin") {
-  $app->response->redirect($app->url->create(""));
-}
+$app->admin->checkIfAdmin();
 
 $contentId = getPost("contentId") ?: getGet("id");
 if (!is_numeric($contentId)) {
@@ -15,14 +7,11 @@ if (!is_numeric($contentId)) {
 }
 
 if (hasKeyPost("doDelete")) {
-    $contentId = getPost("contentId");
-    $sql = "UPDATE content SET deleted=NOW() WHERE id=?;";
-    $db->execute($sql, [$contentId]);
-    $status = '<div class="alert alert-success" role="alert">Deleted!</div>';
+    $app->admin->deleteContent($contentId);
 }
 
 $sql = "SELECT id, title FROM content WHERE id = ?;";
-$content = $db->executeFetch($sql, [$contentId]);
+$content = $app->db->executeFetch($sql, [$contentId]);
 ?>
 
 <div class="container" role="main">
@@ -30,8 +19,6 @@ $content = $db->executeFetch($sql, [$contentId]);
         <h1>Delete</h1>
     </div>
     <div class="col-md-6 bak">
-    <br>
-    <?=$status?>
     <form action="" method="POST">
       <div class="form-group">
         <label>Delete:</label>

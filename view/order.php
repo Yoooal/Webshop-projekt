@@ -1,16 +1,13 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
 
 $ordersArray = [];
 $a = 0;
 
-$costumerName = $session->get("name");
+$costumerName = $app->session->get("name");
 $sql = "SELECT id FROM Customer WHERE username = ?;";
-$customer = $db->executeFetch($sql, [$costumerName]);
+$customer = $app->db->executeFetch($sql, [$costumerName]);
 $sql = $app->sqlCode->getSqlCode("showOrder");
-$content = $db->executeFetchAll($sql, [$customer->id]);
+$content = $app->db->executeFetchAll($sql, [$customer->id]);
 ?>
 
 <div class="container" role="main">

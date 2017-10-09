@@ -1,26 +1,16 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
-
-if ($session->get("name") != "admin") {
-  $app->response->redirect($app->url->create(""));
-}
-
-$sql = "SELECT * FROM content;";
-$content = $db->executeFetchAll($sql);
+$app->admin->checkIfAdmin();
 
 // Handle incoming POST variables
 $id = getPost("id");
+$title = getPost("contentTitle");
 
 if (hasKeyPost("doCreate")) {
-    $title = getPost("contentTitle");
-    $sql = "INSERT INTO content (title) VALUES (?);";
-    $db->execute($sql, [$title]);
-    $id = $db->lastInsertId();
-
-    header("Location: edit?id=$id");
+  $app->admin->createContent($title);
 }
+
+$sql = "SELECT * FROM content;";
+$content = $app->db->executeFetchAll($sql);
 ?>
 
 <div class="container" role="main">

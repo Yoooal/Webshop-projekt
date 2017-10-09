@@ -1,10 +1,6 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
-
 $sql = $app->sqlCode->getSqlCode("showNews");
-$resultset = $db->executeFetchAll($sql);
+$resultset = $app->db->executeFetchAll($sql);
 ?>
 
 <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">

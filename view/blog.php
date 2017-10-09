@@ -1,12 +1,8 @@
 <?php
-$db = $app->db;
-$db->connect();
-
 $sql = $app->sqlCode->getSqlCode("blog");
-$resultset = $db->executeFetchAll($sql, ["post"]);
-
+$resultset = $app->db->executeFetchAll($sql, ["post"]);
 ?>
-<!-- Page Header -->
+
 <header class="masthead" style="background-image: url('img/blog.jpg')">
   <div class="container">
     <div class="row">

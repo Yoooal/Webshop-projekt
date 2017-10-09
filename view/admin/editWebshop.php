@@ -1,39 +1,29 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
-
-if ($session->get("name") != "admin") {
-  $app->response->redirect($app->url->create(""));
-}
+$app->admin->checkIfAdmin();
 
 $status = '<div class="alert alert-info" role="alert">Edit here</div>';
 
+//$params gets all values from getPost()
+$params = getPost([
+      "description",
+      "picture",
+      "price",
+      "category",
+      "items",
+      "id"
+  ]);
+
 if (hasKeyPost("doSave")) {
-  //$params gets all values from getPost()
-  $params = getPost([
-        "description",
-        "picture",
-        "price",
-        "category",
-        "items",
-        "id"
-    ]);
-    $sql = "UPDATE Product SET description=?, picture=?, price=? WHERE id = ?;";
-    $db->execute($sql, [$params["description"], $params["picture"], $params["price"], $params["id"]]);
-    $category = substr($params["category"],0,1);
-    $sql = "UPDATE Prod2Cat SET cat_id=? WHERE prod_id = ?;";
-    $db->execute($sql, [$category, $params["id"]]);
-    $sql = "UPDATE Inventory SET items=? WHERE prod_id = ?;";
-    $db->execute($sql, [$params["items"], $params["id"]]);
+    $app->admin->updateWebshop($params);
     $status = '<div class="alert alert-success" role="alert">Edit saved!</div>';
 }
 
 $contentId = getGet("id");
 $sql = $app->sqlCode->getSqlCode("editWebshop");
-$content = $db->executeFetch($sql, [$contentId]);
+$content = $app->db->executeFetch($sql, [$contentId]);
+// get categories
 $sql = "SELECT * FROM ProdCategory";
-$cat = $db->executeFetchAll($sql);
+$cat = $app->db->executeFetchAll($sql);
 ?>
 
 <div class="container" role="main">

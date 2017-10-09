@@ -1,11 +1,5 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
-
-if ($session->get("name") != "admin") {
-  $app->response->redirect($app->url->create(""));
-}
+$app->admin->checkIfAdmin();
 
 $status = '<div class="alert alert-info" role="alert">Change Password</div>';
 
@@ -17,7 +11,7 @@ if (!(is_numeric($hits) && $hits > 0 && $hits <= 9)) {
 
 // Get max number of pages
 $sql = "SELECT COUNT(id) AS max FROM Customer;";
-$max = $db->executeFetchAll($sql);
+$max = $app->db->executeFetchAll($sql);
 $max = ceil($max[0]->max / $hits);
 
 // Get current page
@@ -41,7 +35,7 @@ if (!(in_array($orderBy, $columns) && in_array($order, $orders))) {
 }
 
 $sql = "SELECT * FROM Customer ORDER BY $orderBy $order LIMIT $hits OFFSET $offset;";
-$resultset = $db->executeFetchAll($sql);
+$resultset = $app->db->executeFetchAll($sql);
 $defaultRoute = "user?";
 
 // Handle incoming POST variables
@@ -57,7 +51,7 @@ if ($new_pass != null && $re_pass != null) {
     if ($new_pass == $re_pass) {
         $crypt_pass = password_hash($new_pass, PASSWORD_DEFAULT);
         $sql = "UPDATE Customer SET password = ? WHERE id = ?;";
-        $db->execute($sql, [$crypt_pass, $id]);
+        $app->db->execute($sql, [$crypt_pass, $id]);
         $status = '<div class="alert alert-success" role="alert">Password changed!</div>';
     } else {
         $status = '<div class="alert alert-danger" role="alert">The passwords do not match</div>';
@@ -66,19 +60,19 @@ if ($new_pass != null && $re_pass != null) {
 
 if ($id != null && $level != null) {
   $sql = "UPDATE Customer SET userLevel = ? WHERE id = ?;";
-  $db->execute($sql, [$level, $id]);
+  $app->db->execute($sql, [$level, $id]);
   header("Location: user");
 }
 
 if ($del != null) {
   $sql = "DELETE FROM Customer WHERE id = ?;";
-  $db->execute($sql, [$del]);
+  $app->db->execute($sql, [$del]);
   header("Location: user");
 }
 
 if ($search != null) {
   $sql = "SELECT * FROM Customer WHERE username LIKE ?;";
-  $resultset = $db->executeFetchAll($sql, [$search . "%"]);
+  $resultset = $app->db->executeFetchAll($sql, [$search . "%"]);
 }
 ?>
 

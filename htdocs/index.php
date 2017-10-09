@@ -30,17 +30,17 @@ $app->cookie        = new \joel\Cookie\Cookie();
 $app->navbar        = new \joel\Navbar\Navbar();
 $app->diceGame      = new \joel\DiceGame\DiceGame();
 $app->sqlCode       = new \joel\sqlCode\sqlCode();
+$app->user          = new \joel\User\User();
+$app->admin         = new \joel\Admin\Admin();
 
-$app->db->configure("database.php");
-// $app->db->setDefaultsFromConfiguration();
 
+$app->user->setApp($app);
+$app->admin->setApp($app);
 $app->navbar->setApp($app);
-$app->navbar->configure("navbar.php");
-
-// Inject $app into the view container for use in view files.
 $app->view->setApp($app);
 
-// Update view configuration with values from config file.
+$app->navbar->configure("navbar.php");
+$app->db->configure("database.php");
 $app->view->configure("view.php");
 
 // Init the object of the request class.

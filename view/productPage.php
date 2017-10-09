@@ -1,11 +1,8 @@
 <?php
-$session = $app->session;
-$db = $app->db;
-$db->connect();
 
 $user_not_loggedin = "disabled";
 
-if ($session->has("name")) {
+if ($app->session->has("name")) {
   $user_not_loggedin = "";
 }
 
@@ -13,18 +10,11 @@ $show = getGet("show");
 $shop = getGet("shop");
 
 if ($shop != null) {
-  $costumerName = $session->get("name");
-  $sql = "SELECT id FROM Customer WHERE username = ?;";
-  $customer = $db->executeFetch($sql, [$costumerName]);
-  $sql = "SELECT * FROM Varukorg WHERE customer = ?;";
-  $cart = $db->executeFetch($sql, [$customer->id]);
-  $sql = "CALL addToVarukorg(?, ?, ?);";
-  $db->execute($sql, [$cart->id, $shop, 1]);
-  header("Location: products");
+  $app->user->shopProduct($shop);
 }
 
 $sql = "SELECT * FROM showWebshop WHERE id = ?;";
-$content = $db->executeFetch($sql, [$show]);
+$content = $app->db->executeFetch($sql, [$show]);
 ?>
 
 <div class="container" role="main">

@@ -1,15 +1,10 @@
 <?php
-$session = $app->session;
 $cookie = $app->cookie;
-$db = $app->db;
-$db->connect();
 
-if (!$session->has("name")) {
-  $app->response->redirect($app->url->create(""));
-}
+$app->user->checkIfLoggedIn();
 
 $status = '<div class="alert alert-info" role="alert">Change Password</div>';
-$user_name = $session->get("name");
+$user_name = $app->session->get("name");
 $cookieStatus = '<div class="alert alert-danger" role="alert">No Cookie exist</div>';
 $yourCookie = "";
 
@@ -19,10 +14,7 @@ if ($cookie->has($user_name)) {
 }
 
 $sql = "SELECT * FROM Customer WHERE username LIKE ?;";
-$resultset = $db->executeFetch($sql, [$user_name]);
-$array = json_decode(json_encode($resultset), True);
-$password = $array["password"];
-$id = $array["id"];
+$user = $app->db->executeFetch($sql, [$user_name]);
 
 // Handle incoming POST variables
 $old_pass = getPost("old_pass");
@@ -44,12 +36,12 @@ if ($delete_cookie != null) {
 // Check if all fields are filled
 if ($old_pass != null && $new_pass != null && $re_pass != null) {
     // Check if old password is correct
-    if (password_verify($old_pass, $password)) {
+    if (password_verify($old_pass, $user->password)) {
         // Check if new password matches
         if ($new_pass == $re_pass) {
                 $crypt_pass = password_hash($new_pass, PASSWORD_DEFAULT);
                 $sql = "UPDATE Customer SET password = ? WHERE id = ?;";
-                $db->execute($sql, [$crypt_pass, $id]);
+                $app->db->execute($sql, [$crypt_pass, $user->id]);
                 $status = '<div class="alert alert-success" role="alert">Password changed!</div>';
         } else {
             $status = '<div class="alert alert-danger" role="alert">The passwords do not match</div>';
@@ -63,7 +55,7 @@ if ($old_pass != null && $new_pass != null && $re_pass != null) {
 
 <div class="container" role="main">
     <div class="page-header">
-        <h1>Profile: <?= $session->get('name') ?></h1>
+        <h1>Profile: <?= $user_name ?></h1>
     </div>
     <div class="page-content">
       <div class="row">

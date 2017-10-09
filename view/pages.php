@@ -1,9 +1,6 @@
 <?php
-$db = $app->db;
-$db->connect();
-
 $sql = $app->sqlCode->getSqlCode("pages");
-$resultset = $db->executeFetchAll($sql, ["page"]);
+$resultset = $app->db->executeFetchAll($sql, ["page"]);
 ?>
 
 <div class="container" role="main">
